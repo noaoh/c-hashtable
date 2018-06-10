@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "hash_table.h"
 
@@ -34,4 +35,24 @@ void ht_del_hash_table(ht_hash_table* ht) {
         }
         free(ht->items);
         free(ht);
+}
+
+static int ht_hash(
+                const char* val, const int prime_num, const int bucket_num
+                ) {
+        long hash = 0;
+        const int string_len = strlen(val);
+        for (int i = 0; i < string_len; i++) {
+                hash += (long)pow(prime_num, (string_len - (i + 1))) * val[i]; 
+                hash %= bucket_num;
+        }
+        return (int)hash;
+}
+
+static int ht_get_hash(
+                const char* val, const int bucket_num, const int attempt
+                ) {
+        const int hash_a = ht_hash(val, HT_PRIME_1, bucket_num);
+        const int hash_b = ht_hash(val, HT_PRIME_2, bucket_num);
+        return (hash_a + (attempt * (hash_b + 1))) % bucket_num;
 }
