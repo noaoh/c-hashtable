@@ -1,25 +1,28 @@
 #include <math.h>
+#include "prime.h"
 
-long* sieve_of_erathosenes(long n) {
-        // Initialize all numbers from 2 to n to 1 (a prime number)
-        short* is_prime[n - 2] = {1};
+int is_prime(const int x) {
+        if (x < 2) { return -1; }
+        if (x < 4) { return 1; }
+        if ((x % 2) == 0 || (x % 3) == 0) { return 0; }
+        int i = 5;
+        int w = 2;
 
-        for (int i = 2; i < sqrt((double)n); i++) {
-                if (is_prime[i]) {
-                        for (int j = (int)pow((double) i, 2); j < n; j += (n * i)) {
-                                is_prime[i] = 0;
-                        }
+        while(pow(i, 2) <= x) {
+                if (x % i == 0) {
+                        return 0;
                 }
+                
+                i += w;
+                w = 6 - w;
         }
 
-        int offset = 3;
-        int size = (int)sqrt((double)n);
-        long* nums[size] = {};
-        for (int x = 0; x < size; x++) {
-                if (is_prime[x]) {
-                        nums[x] = (long)(x + offset);
-                }
-        }
+        return 1;
+}
 
-        return nums;
+int next_prime(int x) {
+        while(is_prime(x) != 1) {
+                x++;
+        }
+        return x;
 }
