@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
 #include "hash_table.h"
 #include "prime.h"
+#include "xmemory.h"
 
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
 
@@ -15,13 +15,13 @@ static ht_item* ht_new_item(const char* k, const char* v) {
 }
 
 ht_hash_table* ht_new_sized(const int base_size) {
-        ht_hash_table* ht = malloc(sizeof(ht_hash_table));
+        ht_hash_table* ht = xmalloc(sizeof(ht_hash_table));
         ht->base_size = base_size;
 
         ht->size = next_prime(ht->base_size);
 
         ht->count = 0;
-        ht->items = calloc((size_t)ht->size, sizeof(ht_item*));
+        ht->items = xcalloc((size_t)ht->size, sizeof(ht_item*));
         return ht;
 }
 
